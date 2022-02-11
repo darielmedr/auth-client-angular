@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'styles/theme';
+@import 'styles/variables';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  font-size: 62.5%;
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  font-family: var(--font-family);
+  font-size: var(--font-size-text);
+  color: $dark-text;
+}

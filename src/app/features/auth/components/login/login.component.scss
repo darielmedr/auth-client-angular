@@ -1,0 +1,74 @@
+$color-bg-card: hsla(0, 0%, 20%, 0.45);
+$accent-color: var(--primary-color);
+$accent-color-lighter: var(--primary-lighter-color);
+
+::ng-deep app-login {
+  width: 100%;
+}
+
+.mat-card {
+  width: min(90%, 40rem);
+  margin: 0 auto;
+  text-align: center;
+  background-color: $color-bg-card;
+
+  .mat-card-header {
+    margin-bottom: 3rem;
+    justify-content: center;
+
+    .mat-card-title {
+      transform: scale(1.3);
+      span {
+        text-transform: uppercase;
+        color: var(--color-white);
+
+        &.accent-title {
+          color: $accent-color;
+          margin-left: 0.5rem;
+        }
+      }
+    }
+  }
+
+  .mat-card-content {
+    p {
+      color: $accent-color-lighter;
+    }
+
+    .mat-form-field {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .forgot-password,
+    .create-account {
+      margin: 2rem 0;
+
+      a {
+        color: $accent-color-lighter;
+
+        &:hover {
+          color: var(--color-white);
+        }
+      }
+    }
+
+    button {
+      width: 100%;
+      color: var(--color-white);
+    }
+
+    .google-logo {
+      margin-right: 1rem;
+    }
+
+    .mat-divider {
+      position: relative;
+      margin: 2rem 0;
+    }
+  }
+}
+
+::ng-deep .mat-form-field-prefix {
+  margin-right: 1rem;
+}

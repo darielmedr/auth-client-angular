@@ -1,0 +1,12 @@
+.auth {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(
+    to right bottom,
+    var(--primary-darker-color) 35%,
+    var(--accent-darker-color)
+  );
+}

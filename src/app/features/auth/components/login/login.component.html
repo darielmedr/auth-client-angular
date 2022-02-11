@@ -1,0 +1,52 @@
+<mat-card class="mat-elevation-z12">
+    <mat-card-header>
+        <mat-card-title>
+            <span>Log</span>
+            <span class="accent-title">IN</span>
+        </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+        <form [formGroup]="loginForm" (ngSubmit)="loginWithEmailAndPassword()">
+            <p>
+                <mat-form-field appearance="outline" color="accent">
+                    <mat-label>Enter your email</mat-label>
+                    <input matInput placeholder="johndoe@email.domain" formControlName="email" autocomplete="email"
+                        required />
+                    <mat-error *ngIf="loginForm.controls['email'].hasError"></mat-error>
+                    <mat-icon matPrefix>email</mat-icon>
+                </mat-form-field>
+            </p>
+
+            <p>
+                <mat-form-field appearance="outline" color="accent">
+                    <mat-label>Enter your password</mat-label>
+                    <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required
+                        autocomplete="current-password" />
+                    <mat-error *ngIf="loginForm.controls['password'].invalid">{{
+                        getPasswordErrorMessage()
+                        }}</mat-error>
+                    <mat-icon matPrefix>lock</mat-icon>
+                    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword" type="button">
+                        <mat-icon>{{
+                            hidePassword ? "visibility_off" : "visibility"
+                            }}</mat-icon>
+                    </button>
+                </mat-form-field>
+            </p>
+
+            <div class="forgot-password">
+                <a type="button" routerLink="/auth/reset-password">Forgot Password?</a>
+            </div>
+
+            <div class="create-account">
+                <a type="button" routerLink="/auth/signup">Create account</a>
+            </div>
+
+            <button mat-flat-button [disabled]="!loginForm.valid" class="btn-submit" type="submit" color="primary">
+                Login
+            </button>
+        </form>
+    </mat-card-content>
+</mat-card>
