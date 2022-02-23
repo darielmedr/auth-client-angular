@@ -5,7 +5,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from './core/core.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
+import { authInterceptorProviders } from './core/interceptors/auth.interceptor';
+import { xsrfInterceptorProviders } from './core/interceptors/xsrf.interceptor';
 
 @NgModule({
   declarations: [
@@ -16,9 +18,13 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     BrowserAnimationsModule,
     CoreModule,
-    HttpClientModule
+    HttpClientModule,
+    HttpClientXsrfModule
   ],
-  providers: [],
+  providers: [
+    xsrfInterceptorProviders,
+    authInterceptorProviders
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
