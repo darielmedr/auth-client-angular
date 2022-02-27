@@ -12,9 +12,15 @@ export class AppComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
+    this.initHandShakeAndGetXSRFToken();
+
     if (this.authService.isLoggedIn()) {
       this.enableSilentRefreshToken();
     }
+  }
+
+  private initHandShakeAndGetXSRFToken(): void {
+    this.authService.getXSRFToken().pipe(first()).subscribe();
   }
 
   private enableSilentRefreshToken(): void {

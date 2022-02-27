@@ -4,9 +4,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AppComponent } from './app.component';
 import { AuthService } from './core/services/auth.service';
-import { EMPTY } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 
-describe('DashboardComponent', () => {
+describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
 
@@ -19,7 +19,9 @@ describe('DashboardComponent', () => {
         RouterTestingModule,
       ],
       providers: [
-        MockProvider(AuthService)
+        MockProvider(AuthService, {
+          getXSRFToken: () => EMPTY,
+        })
       ]
     })
     .compileComponents();
@@ -36,6 +38,14 @@ describe('DashboardComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it("should call #authService.getXSRFToken() onInit to get XSRF token", () => {
+    const spy = spyOn(authServiceSpy, 'getXSRFToken').and.returnValue(of(''));
+
+    component.ngOnInit();
+
+    expect(spy).toHaveBeenCalled();
   });
 
   it("should call #authService.refreshToken() when user is logged in to init silent refresh", () => {

@@ -43,15 +43,19 @@ export class AuthInterceptor implements HttpInterceptor {
       catchError((error) => {
         if (
           error instanceof HttpErrorResponse &&
-          !clonedReq.url.includes('auth/login') &&
+          !this.isLoginRequest(clonedReq) &&
           error.status === 401 &&
           error.error !== 'Invalid token'
         ) {
           return this.handle401Error(clonedReq, next);
         }
-        return throwError(() => new Error(error));
+        return throwError(() => error);
       }),
     );
+  }
+
+  private isLoginRequest(req: HttpRequest<unknown>): boolean {
+    return (req.url.endsWith('/sessions') && req.method === 'POST');
   }
 
   private handle401Error(
@@ -71,7 +75,7 @@ export class AuthInterceptor implements HttpInterceptor {
           this.isRefreshing = false;
           this.authService.cleanSession();
 
-          return throwError(() => new Error(err));
+          return throwError(() => err);
         })
       );
     }
@@ -79,7 +83,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return this.sessionData$.pipe(
       filter((sessionData) => !!sessionData),
       take(1),
-      switchMap((_) => next.handle(request))
+      switchMap(() => next.handle(request))
     );
   }
 }

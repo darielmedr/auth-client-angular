@@ -48,6 +48,17 @@ describe('AuthService', () => {
     expect(service).toBeTruthy();
   });
 
+  it("should send GET request to /", () => {
+    service.getXSRFToken().subscribe();
+
+    const expectedUrl = `${baseUrl}/handshake/xsrf/token`;
+    const req = httpTestingController.expectOne(expectedUrl);
+
+    expect(req.request.method).toEqual('GET');
+
+    req.flush(null);
+  });
+
   describe("#loginWithEmailAndPassword()", () => {
     const mockEmail = 'johndoe@domain';
     const mockPassword = 'secretPassword';

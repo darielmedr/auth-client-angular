@@ -19,6 +19,10 @@ export class AuthService {
     private router: Router
   ) {}
 
+  public getXSRFToken(): Observable<string> {
+    return this.http.get<string>(`${this.apiUrl}/handshake/xsrf/token`);
+  }
+
   public loginWithEmailAndPassword(email: string, password: string): Observable<boolean> {
     return this.http.post<SessionData>(`${this.apiUrl}/sessions`, { email, password }).pipe(
       tap<SessionData>(session => this.storageService.storeSessionData(session)),

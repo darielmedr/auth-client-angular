@@ -7,7 +7,7 @@
     </mat-card-header>
 
     <mat-card-content>
-        <form [formGroup]="loginForm" (ngSubmit)="loginWithEmailAndPassword()">
+        <form id="loginForm" [formGroup]="loginForm" (ngSubmit)="loginWithEmailAndPassword()">
             <p>
                 <mat-form-field appearance="outline" color="accent">
                     <mat-label>Enter your email</mat-label>
