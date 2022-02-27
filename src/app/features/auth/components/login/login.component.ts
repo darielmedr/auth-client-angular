@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { AlertService } from 'src/app/core/services/alert.service';
@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private unsuscribe$: Subject<void> = new Subject<void>();
 
   public hidePassword: boolean = true;
-  public loginForm!: FormGroup;
+  public loginForm: FormGroup = new FormGroup({});
 
   public isLoading$: Observable<boolean> = new Observable();
 

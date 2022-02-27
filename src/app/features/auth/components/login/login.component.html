@@ -13,7 +13,7 @@
                     <mat-label>Enter your email</mat-label>
                     <input matInput placeholder="johndoe@email.domain" formControlName="email" autocomplete="email"
                         required />
-                    <mat-error *ngIf="loginForm.controls['email'].hasError"></mat-error>
+                    <mat-error *ngIf="loginForm.get('email')?.invalid">{{ getEmailErrorMessage() }}</mat-error>
                     <mat-icon matPrefix>email</mat-icon>
                 </mat-form-field>
             </p>
@@ -23,7 +23,7 @@
                     <mat-label>Enter your password</mat-label>
                     <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required
                         autocomplete="current-password" />
-                    <mat-error *ngIf="loginForm.controls['password'].invalid">{{
+                    <mat-error *ngIf="loginForm.get('password')?.invalid">{{
                         getPasswordErrorMessage()
                         }}</mat-error>
                     <mat-icon matPrefix>lock</mat-icon>

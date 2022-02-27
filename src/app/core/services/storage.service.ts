@@ -7,7 +7,7 @@ import { StorageKey } from 'src/app/shared/types/storage-key';
 @Injectable({
   providedIn: 'root',
 })
-export class StateService {
+export class StorageService {
   constructor() {}
 
   public storeSessionData(data: SessionData): void {

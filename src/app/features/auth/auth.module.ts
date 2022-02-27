@@ -5,7 +5,7 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { AuthComponent } from './auth.component';
 import { LoginComponent } from './components/login/login.component';
 import { MaterialModule } from 'src/app/shared/modules/material/material.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
@@ -21,6 +21,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     CommonModule,
     AuthRoutingModule,
     MaterialModule,
+    FormsModule,
     ReactiveFormsModule
   ]
 })

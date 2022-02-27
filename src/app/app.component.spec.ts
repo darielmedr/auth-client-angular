@@ -1,35 +1,50 @@
-import { TestBed } from '@angular/core/testing';
+import { MockProvider } from 'ng-mocks';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AppComponent } from './app.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-describe('AppComponent', () => {
+import { AppComponent } from './app.component';
+import { AuthService } from './core/services/auth.service';
+import { EMPTY } from 'rxjs';
+
+describe('DashboardComponent', () => {
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
+  let authServiceSpy: jasmine.SpyObj<AuthService>;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      declarations: [ AppComponent ],
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
       ],
-      declarations: [
-        AppComponent
-      ],
-    }).compileComponents();
+      providers: [
+        MockProvider(AuthService)
+      ]
+    })
+    .compileComponents();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
 
-  it(`should have as title 'auth-client'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('auth-client');
-  });
+    authServiceSpy = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('auth-client app is running!');
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it("should call #authService.refreshToken() when user is logged in to init silent refresh", () => {
+    spyOn(authServiceSpy, 'isLoggedIn').and.returnValue(true);
+
+    const spy = spyOn(authServiceSpy, 'refreshToken').and.returnValue(EMPTY);
+
+    component.ngOnInit();
+
+    expect(spy).toHaveBeenCalled();
   });
 });

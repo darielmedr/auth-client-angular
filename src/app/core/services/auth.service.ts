@@ -5,7 +5,7 @@ import * as dayjs from 'dayjs';
 import { map, Observable, switchMap, take, tap, timer } from 'rxjs';
 import { SessionData } from 'src/app/shared/models/session-data.model';
 import { environment } from 'src/environments/environment';
-import { StateService } from './state.service';
+import { StorageService } from './storage.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -15,15 +15,15 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private stateService: StateService,
+    private storageService: StorageService,
     private router: Router
   ) {}
 
   public loginWithEmailAndPassword(email: string, password: string): Observable<boolean> {
     return this.http.post<SessionData>(`${this.apiUrl}/sessions`, { email, password }).pipe(
-      tap<SessionData>(session => this.stateService.storeSessionData(session)),
+      tap<SessionData>(session => this.storageService.storeSessionData(session)),
       tap<SessionData>(session => this.doSilentRefresh(session.expiresIn)),
-      map<SessionData, boolean>(_ => !this.stateService.hasInvalidSessionData())
+      map<SessionData, boolean>(_ => !this.storageService.hasInvalidSessionData())
     );
   }
 
@@ -36,7 +36,7 @@ export class AuthService {
   public refreshToken(): Observable<SessionData> {
     return this.http.post<SessionData>(`${this.apiUrl}/sessions/refresh`, {})
       .pipe(
-        tap<SessionData>(session => this.stateService.storeSessionData(session)),
+        tap<SessionData>(session => this.storageService.storeSessionData(session)),
         tap<SessionData>(session => this.doSilentRefresh(session.expiresIn))
       );
   }
@@ -62,13 +62,13 @@ export class AuthService {
   }
 
   public cleanSession(): void {
-    this.stateService.deleteSessionData();
+    this.storageService.deleteSessionData();
     this.router.navigate(['/auth'])
   }
 
   public isLoggedIn(): boolean {
     return (
-      !this.stateService.hasInvalidSessionData() &&
+      !this.storageService.hasInvalidSessionData() &&
       dayjs().isBefore(this.getExpiration())
     );
   }
@@ -78,7 +78,7 @@ export class AuthService {
   }
 
   private getExpiration() {
-    const expiresAt: number | null = this.stateService.getDataByKey<number>('expires_at');
+    const expiresAt: number | null = this.storageService.getDataByKey<number>('expires_at');
 
     return expiresAt
       ? expiresAt
