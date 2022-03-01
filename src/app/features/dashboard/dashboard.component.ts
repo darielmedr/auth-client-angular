@@ -21,7 +21,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   public getData() {
     this.http
-      .get(`http://localhost:5000/api/users/me`)
+      .get(`http://localhost:5000/api/private/data`)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (data) => console.log(data),

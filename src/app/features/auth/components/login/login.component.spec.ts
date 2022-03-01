@@ -16,7 +16,7 @@ describe('LoginComponent', () => {
   let fixture: ComponentFixture<LoginComponent>;
 
   let authServiceSpy: jasmine.SpyObj<AuthService>;
-  let routerServiceSpy: jasmine.SpyObj<Router>;
+  let routerSpy: jasmine.SpyObj<Router>;
   let alertServiceSpy: jasmine.SpyObj<AlertService>;
 
   beforeEach(async () => {
@@ -47,7 +47,7 @@ describe('LoginComponent', () => {
     component = fixture.componentInstance;
 
     authServiceSpy = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
-    routerServiceSpy = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+    routerSpy = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     alertServiceSpy = TestBed.inject(AlertService) as jasmine.SpyObj<AlertService>;
 
     fixture.detectChanges();
@@ -107,12 +107,11 @@ describe('LoginComponent', () => {
       component.loginForm.patchValue(invalidData);
       fixture.detectChanges();
 
-      const spy = spyOn(alertServiceSpy, 'showError');
       const expectedMessage = "Login form has invalid fields.";
 
       component.loginWithEmailAndPassword();
 
-      expect(spy).toHaveBeenCalledWith(expectedMessage);
+      expect(alertServiceSpy.showError).toHaveBeenCalledWith(expectedMessage);
     });
 
     describe("when loginForm is valid", () => {
@@ -127,45 +126,42 @@ describe('LoginComponent', () => {
       });
 
       it('should call #authService.loginWithEmailAndPassword()', () => {
-        const spy = spyOn(authServiceSpy, "loginWithEmailAndPassword").and.returnValue(EMPTY);
+        authServiceSpy.loginWithEmailAndPassword.and.returnValue(EMPTY);
 
         component.loginWithEmailAndPassword();
 
-        expect(spy).toHaveBeenCalledWith(validData.email, validData.password);
+        expect(authServiceSpy.loginWithEmailAndPassword).toHaveBeenCalledWith(validData.email, validData.password);
       });
 
       it("should navigate to '/dashboard' when #authService.loginWithEmailAndPassword() returns true.", () => {
-        spyOn(authServiceSpy, "loginWithEmailAndPassword").and.returnValue(of(true));
+        authServiceSpy.loginWithEmailAndPassword.and.returnValue(of(true));
 
-        const spy = spyOn(routerServiceSpy, "navigate");
         const expectedPath = '/dashboard';
 
         component.loginWithEmailAndPassword();
 
-        expect(spy).toHaveBeenCalledWith([expectedPath]);
+        expect(routerSpy.navigate).toHaveBeenCalledWith([expectedPath]);
       });
 
       it("should call #alertService.showError() when #authService.loginWithEmailAndPassword() returns false.", () => {
-        spyOn(authServiceSpy, "loginWithEmailAndPassword").and.returnValue(of(false));
+        authServiceSpy.loginWithEmailAndPassword.and.returnValue(of(false));
 
-        const spy = spyOn(alertServiceSpy, 'showError');
         const expectedMessage = "Login form has invalid fields.";
 
         component.loginWithEmailAndPassword();
 
-        expect(spy).toHaveBeenCalledWith(expectedMessage);
+        expect(alertServiceSpy.showError).toHaveBeenCalledWith(expectedMessage);
       });
 
       it("should call #alertService.showError() when #authService.loginWithEmailAndPassword() returns an error.", () => {
-        spyOn(authServiceSpy, "loginWithEmailAndPassword").and
-          .returnValue(throwError(() => "Some error message with login endpoint."));
+        authServiceSpy.loginWithEmailAndPassword.and
+          .returnValue(throwError(() => "Some mock error message with login endpoint."));
 
-        const spy = spyOn(alertServiceSpy, 'showError');
         const expectedMessage = 'Upss! Something went wrong.';
 
         component.loginWithEmailAndPassword();
 
-        expect(spy).toHaveBeenCalledWith(expectedMessage);
+        expect(alertServiceSpy.showError).toHaveBeenCalledWith(expectedMessage);
       });
     });
   });

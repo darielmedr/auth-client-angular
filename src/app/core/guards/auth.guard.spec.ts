@@ -30,7 +30,7 @@ describe('AuthGuard', () => {
     const mockStateRoute = {} as RouterStateSnapshot;
 
     it("should return TRUE when user is logged in", () => {
-      spyOn(authServiceSpy, 'isLoggedIn').and.returnValue(true);
+      authServiceSpy.isLoggedIn.and.returnValue(true);
 
       const result = guard.canActivate(mockRoute, mockStateRoute);
 
@@ -38,14 +38,12 @@ describe('AuthGuard', () => {
     });
 
     it("should return FALSE when user is NOT logged in and call #authService.cleanSession()", () => {
-      spyOn(authServiceSpy, 'isLoggedIn').and.returnValue(false);
-
-      const spy = spyOn(authServiceSpy, 'cleanSession');
+      authServiceSpy.isLoggedIn.and.returnValue(false);
 
       const result = guard.canActivate(mockRoute, mockStateRoute);
 
       expect(result).toBeFalse();
-      expect(spy).toHaveBeenCalled();
+      expect(authServiceSpy.cleanSession).toHaveBeenCalled();
     });
   });
 });

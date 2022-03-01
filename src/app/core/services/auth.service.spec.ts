@@ -88,12 +88,10 @@ describe('AuthService', () => {
     });
 
     it("should call #storageService.storeSessionData() with sessionData as side effect", () => {
-      const spy = spyOn(storageServiceSpy, 'storeSessionData');
-
       service
         .loginWithEmailAndPassword(mockEmail, mockPassword)
         .subscribe(() => {
-          expect(spy).toHaveBeenCalledWith(mockSessionData);
+          expect(storageServiceSpy.storeSessionData).toHaveBeenCalledWith(mockSessionData);
         });
 
       const expectedUrl = `${baseUrl}/sessions`;
@@ -102,7 +100,7 @@ describe('AuthService', () => {
     });
 
     it("should return TRUE when session data is save in storage", () => {
-      spyOn(storageServiceSpy, 'hasInvalidSessionData').and.returnValue(false);
+      storageServiceSpy.hasInvalidSessionData.and.returnValue(false);
 
       service
         .loginWithEmailAndPassword(mockEmail, mockPassword)
@@ -116,31 +114,17 @@ describe('AuthService', () => {
     });
   });
 
-  describe("#logout()", () => {
-    it("should send DELETE request to /sessions", () => {
-      service.logout().subscribe();
-
-      const expectedUrl = `${baseUrl}/sessions`;
-      const req = httpTestingController.expectOne(expectedUrl);
-
-      expect(req.request.method).toEqual('DELETE');
-
-      req.flush({});
+  it('#logout() should send DELETE request to /sessions and call #cleanSession()', () => {
+    service.logout().subscribe(() => {
+      expect(service.cleanSession).toHaveBeenCalled();
     });
 
-    it("should call #cleanSession()", () => {
-      const spy = spyOn(service, 'cleanSession');
+    const expectedUrl = `${baseUrl}/sessions`;
+    const req = httpTestingController.expectOne(expectedUrl);
 
-      service
-        .logout()
-        .subscribe(() => {
-          expect(spy).toHaveBeenCalled();
-        });
+    expect(req.request.method).toEqual('DELETE');
 
-      const expectedUrl = `${baseUrl}/sessions`;
-      const req = httpTestingController.expectOne(expectedUrl);
-      req.flush({});
-    });
+    req.flush({});
   });
 
   describe("#refreshToken()", () => {
@@ -166,12 +150,10 @@ describe('AuthService', () => {
     });
 
     it("should call #storageService.storeSessionData() with sessionData as side effect", () => {
-      const spy = spyOn(storageServiceSpy, 'storeSessionData');
-
       service
         .refreshToken()
         .subscribe(() => {
-          expect(spy).toHaveBeenCalledWith(mockSessionData);
+          expect(storageServiceSpy.storeSessionData).toHaveBeenCalledWith(mockSessionData);
         });
 
       const expectedUrl = `${baseUrl}/sessions/refresh`;
@@ -226,20 +208,17 @@ describe('AuthService', () => {
 
   describe("#cleanSession()", () => {
     it("should call #storageService.deleteSessionData()", () => {
-      const spy = spyOn(storageServiceSpy, 'deleteSessionData');
-
       service.cleanSession();
 
-      expect(spy).toHaveBeenCalled();
+      expect(storageServiceSpy.deleteSessionData).toHaveBeenCalled();
     });
 
     it("should call #router and navigate to /auth", () => {
       const expectedPath = '/auth';
-      const spy = spyOn(routerSpy, 'navigate');
 
       service.cleanSession();
 
-      expect(spy).toHaveBeenCalledWith([expectedPath]);
+      expect(routerSpy.navigate).toHaveBeenCalledWith([expectedPath]);
     });
   });
 
@@ -254,8 +233,8 @@ describe('AuthService', () => {
 
       MockDate.set(mockCurrentDate);
 
-      spyOn(storageServiceSpy, 'hasInvalidSessionData').and.returnValue(false);
-      spyOn(storageServiceSpy, 'getDataByKey')
+      storageServiceSpy.hasInvalidSessionData.and.returnValue(false);
+      storageServiceSpy.getDataByKey
         .withArgs('expires_at' as StorageKey).and.returnValue(expirationDate);
 
       const result = service.isLoggedIn();
@@ -269,8 +248,8 @@ describe('AuthService', () => {
 
       MockDate.set(mockCurrentDate);
 
-      spyOn(storageServiceSpy, 'hasInvalidSessionData').and.returnValue(true);
-      spyOn(storageServiceSpy, 'getDataByKey')
+      storageServiceSpy.hasInvalidSessionData.and.returnValue(true);
+      storageServiceSpy.getDataByKey
         .withArgs('expires_at' as StorageKey).and.returnValue(expirationDate);
 
       const result = service.isLoggedIn();
@@ -284,8 +263,8 @@ describe('AuthService', () => {
 
       MockDate.set(mockCurrentDate);
 
-      spyOn(storageServiceSpy, 'hasInvalidSessionData').and.returnValue(false);
-      spyOn(storageServiceSpy, 'getDataByKey')
+      storageServiceSpy.hasInvalidSessionData.and.returnValue(false);
+      storageServiceSpy.getDataByKey
         .withArgs('expires_at' as StorageKey).and.returnValue(expirationDate);
 
       const result = service.isLoggedIn();

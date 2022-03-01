@@ -1,4 +1,4 @@
-import { MockProvider } from 'ng-mocks';
+import { MockProvider, MockProviders } from 'ng-mocks';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -49,12 +49,12 @@ describe('AppComponent', () => {
   });
 
   it("should call #authService.refreshToken() when user is logged in to init silent refresh", () => {
-    spyOn(authServiceSpy, 'isLoggedIn').and.returnValue(true);
+    authServiceSpy.isLoggedIn.and.returnValue(true);
 
-    const spy = spyOn(authServiceSpy, 'refreshToken').and.returnValue(EMPTY);
+    authServiceSpy.refreshToken.and.returnValue(EMPTY);
 
     component.ngOnInit();
 
-    expect(spy).toHaveBeenCalled();
+    expect(authServiceSpy.refreshToken).toHaveBeenCalled();
   });
 });

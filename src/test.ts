@@ -6,6 +6,7 @@ import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
+import { ngMocks } from 'ng-mocks';
 
 declare const require: {
   context(path: string, deep?: boolean, filter?: RegExp): {
@@ -13,6 +14,8 @@ declare const require: {
     <T>(id: string): T;
   };
 };
+
+ngMocks.autoSpy('jasmine');
 
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
