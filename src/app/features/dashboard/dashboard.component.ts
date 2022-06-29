@@ -1,6 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Observable, shareReplay, Subject, takeUntil } from 'rxjs';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { LinkRoute } from 'src/app/shared/models/link-route.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,24 +10,55 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+
   private unsubscribe$: Subject<void> = new Subject();
 
-  constructor(private http: HttpClient) {}
+  public isHandset$: Observable<boolean> = new Observable();
 
-  ngOnInit(): void {}
+  public featureLinks: LinkRoute[] = [
+    {
+      name: 'New item',
+      route: 'new-item',
+      icon: 'add_task'
+    },
+    {
+      name: 'Category',
+      route: 'category',
+      icon: 'category'
+    },
+    {
+      name: 'List items',
+      route: 'list-items',
+      icon: 'receipt_long'
+    },
+  ];
+
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit(): void {
+    this.isHandset$ = this.breakpointObserver.observe(Breakpoints.Handset)
+      .pipe(
+        map(result => result.matches),
+        shareReplay()
+      );
+  }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
 
-  public getData() {
-    this.http
-      .get(`http://localhost:5000/api/private/data`)
+  public logout() {
+    this.authService.logout()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: (data) => console.log(data),
-        error: (err) => console.log(err)
+        next: () => {},
+        error: () => {
+          this.authService.cleanSession();
+        }
       });
   }
 }

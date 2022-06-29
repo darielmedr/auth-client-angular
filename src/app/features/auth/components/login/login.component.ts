@@ -12,7 +12,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
-  private unsuscribe$: Subject<void> = new Subject<void>();
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   public hidePassword: boolean = true;
   public loginForm: FormGroup = new FormGroup({});
@@ -34,8 +34,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unsuscribe$.next();
-    this.unsuscribe$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   public getEmailErrorMessage(): string {
@@ -62,10 +62,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     const { email, password } = this.loginForm.value;
 
     this.authService.loginWithEmailAndPassword(email, password)
-      .pipe(takeUntil(this.unsuscribe$))
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: (isSuccessfullLogin: boolean) => {
-          if (!isSuccessfullLogin) {
+        next: (isSuccessfulLogin: boolean) => {
+          if (!isSuccessfulLogin) {
             this.alertService.showError('Login form has invalid fields.');
             return;
           }

@@ -21,6 +21,13 @@ const routes: Routes = [
         (m) => m.DashboardModule
       ),
   },
+  {
+    path: 'configuration',
+    canActivate: [ AuthGuard ],
+    loadChildren: () => import('./features/configuration/configuration.module').then(
+      m => m.ConfigurationModule
+    )
+  },
 ];
 
 @NgModule({

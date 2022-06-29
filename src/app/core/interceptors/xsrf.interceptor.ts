@@ -21,7 +21,6 @@ export class XsrfInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
 
-
     const csrfToken = this.tokenExtractor.getToken();
 
     if (csrfToken !== null && !request.headers.has(this.#headerName)) {

@@ -7,8 +7,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { SessionData } from 'src/app/shared/models/session-data.model';
 import { UserData } from 'src/app/shared/models/user-data.model';
-import MockDate from 'mockdate';
 import { StorageKey } from 'src/app/shared/types/storage-key';
+import MockDate from 'mockdate';
 
 describe('AuthService', () => {
   let service: AuthService;
